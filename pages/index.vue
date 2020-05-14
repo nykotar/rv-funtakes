@@ -1,92 +1,74 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
-    >
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
+  <v-container fluid>
+    <v-row justify="center">
+      <v-col cols="6">
+        <v-form>
+          <h1 class="headline mb-2">
+            Number sequences
+          </h1>
           <v-btn
             color="primary"
-            nuxt
-            to="/inspire"
+            class="mr-3 mb-3"
+            @click="addField"
           >
-            Continue
+            Add
           </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+          <v-btn
+            color="error"
+            class="mr-3 mb-3"
+            @click="removeField"
+          >
+            Remove
+          </v-btn>
+          <div class="d-flex flex-column">
+            <v-row v-for="(range, index) in ranges" :key="index" align="center">
+              <v-col>
+                <v-text-field
+                  v-model="ranges[index]"
+                  type="number"
+                  label="Number range"
+                  required
+                />
+              </v-col>
+              <v-col>
+                <p>Bits: {{ calcBits(ranges[index]) }}</p>
+              </v-col>
+            </v-row>
+          </div>
+          <v-divider />
+          <v-btn
+            color="success"
+            class="mr-4 mt-3"
+            @click="validate"
+          >
+            Begin
+          </v-btn>
+        </v-form>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  data () {
+    return {
+      groups: 1,
+      ranges: [9]
+    }
+  },
+  methods: {
+    addField () {
+      this.ranges.push(this.ranges[this.ranges.length - 1])
+    },
+    removeField () {
+      if (this.ranges.length > 1) {
+        this.ranges.pop()
+      }
+    },
+    calcBits (num) {
+      return Math.floor(Math.log(num) / Math.log(2)) + 1
+    }
   }
 }
 </script>
