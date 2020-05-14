@@ -2,10 +2,10 @@
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="6">
+        <h1 class="headline mb-2">
+          Numbers sequence
+        </h1>
         <v-form>
-          <h1 class="headline mb-2">
-            Number sequences
-          </h1>
           <v-btn
             color="primary"
             class="mr-3 mb-3"
@@ -35,7 +35,6 @@
               </v-col>
             </v-row>
           </div>
-          <v-divider />
           <v-btn
             color="success"
             class="mr-4 mt-3"
@@ -43,6 +42,26 @@
           >
             Begin
           </v-btn>
+        </v-form>
+      </v-col>
+      <v-col cols="6">
+        <v-form>
+          <h1 class="headline mb-2">
+            Targetting
+          </h1>
+          <v-text-field
+            v-model="targetId"
+            label="Target ID"
+            required
+          />
+          <h1 class="headline mb-2">
+            Share settings
+          </h1>
+          <v-text-field
+            v-model="shareLink"
+            readonly
+            solo
+          />
         </v-form>
       </v-col>
     </v-row>
@@ -53,8 +72,28 @@
 export default {
   data () {
     return {
-      groups: 1,
-      ranges: [9]
+      ranges: [9],
+      targetId: ''
+    }
+  },
+  computed: {
+    shareLink () {
+      let link = window.location.origin + '/?'
+      link = link + `targetId=${this.targetId}&sequence=${this.ranges.join(',')}`
+      return link
+    }
+  },
+  mounted () {
+    const params = this.$route.query
+    if (params.targetId) {
+      this.targetId = params.targetId
+    }
+    if (params.sequence) {
+      const sequence = params.sequence.split(',')
+      this.ranges = []
+      for (const num of sequence) {
+        this.ranges.push(parseInt(num))
+      }
     }
   },
   methods: {
