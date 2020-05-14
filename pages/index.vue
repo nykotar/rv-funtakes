@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row justify="center">
-      <v-col cols="6">
+    <v-row justify="center" no-gutters>
+      <v-col :cols="12" :md="6">
         <h1 class="headline mb-2">
           Numbers sequence
         </h1>
@@ -35,16 +35,12 @@
               </v-col>
             </v-row>
           </div>
-          <v-btn
-            color="success"
-            class="mr-4 mt-3"
-            @click="validate"
-          >
-            Begin
-          </v-btn>
+          <p class="subtitle-2">
+            Total: {{ sequence.length }} | {{ totalBits }} bits
+          </p>
         </v-form>
       </v-col>
-      <v-col cols="6">
+      <v-col :cols="12" :md="6">
         <v-form>
           <h1 class="headline mb-2">
             Targetting
@@ -65,6 +61,13 @@
         </v-form>
       </v-col>
     </v-row>
+    <v-btn
+      color="success"
+      class="mr-4 mt-3"
+      @click="validate"
+    >
+      Begin
+    </v-btn>
   </v-container>
 </template>
 
@@ -81,6 +84,13 @@ export default {
       let link = window.location.origin + '/?'
       link = link + `targetId=${this.targetId}&sequence=${this.sequence.join(',')}`
       return link
+    },
+    totalBits () {
+      let total = 0
+      for (const num of this.sequence) {
+        total = total + this.calcBits(num)
+      }
+      return total
     }
   },
   mounted () {
