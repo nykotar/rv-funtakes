@@ -21,17 +21,17 @@
             Remove
           </v-btn>
           <div class="d-flex flex-column">
-            <v-row v-for="(range, index) in ranges" :key="index" align="center">
+            <v-row v-for="(number, index) in sequence" :key="index" align="center">
               <v-col>
                 <v-text-field
-                  v-model="ranges[index]"
+                  v-model="sequence[index]"
                   type="number"
                   label="Number range"
                   required
                 />
               </v-col>
               <v-col>
-                <p>Bits: {{ calcBits(ranges[index]) }}</p>
+                <p>Bits: {{ calcBits(sequence[index]) }}</p>
               </v-col>
             </v-row>
           </div>
@@ -72,14 +72,14 @@
 export default {
   data () {
     return {
-      ranges: [9],
+      sequence: [9],
       targetId: ''
     }
   },
   computed: {
     shareLink () {
       let link = window.location.origin + '/?'
-      link = link + `targetId=${this.targetId}&sequence=${this.ranges.join(',')}`
+      link = link + `targetId=${this.targetId}&sequence=${this.sequence.join(',')}`
       return link
     }
   },
@@ -90,19 +90,19 @@ export default {
     }
     if (params.sequence) {
       const sequence = params.sequence.split(',')
-      this.ranges = []
+      this.sequence = []
       for (const num of sequence) {
-        this.ranges.push(parseInt(num))
+        this.sequence.push(parseInt(num))
       }
     }
   },
   methods: {
     addField () {
-      this.ranges.push(this.ranges[this.ranges.length - 1])
+      this.sequence.push(this.sequence[this.sequence.length - 1])
     },
     removeField () {
-      if (this.ranges.length > 1) {
-        this.ranges.pop()
+      if (this.sequence.length > 1) {
+        this.sequence.pop()
       }
     },
     calcBits (num) {
