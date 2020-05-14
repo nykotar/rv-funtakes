@@ -3,14 +3,18 @@
     <v-app-bar
       :fixed="false"
       app
+      dense
     >
       <v-toolbar-title v-text="title" />
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+        href="https://github.com/nykotar/rv-funtakes"
+      >
+        <v-icon>mdi-github</v-icon>
+      </v-btn>
     </v-app-bar>
-    <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
-    </v-content>
+    <nuxt />
   </v-app>
 </template>
 
