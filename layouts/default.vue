@@ -6,7 +6,7 @@
       dense
     >
       <v-toolbar-title v-text="title" />
-      <v-spacer></v-spacer>
+      <v-spacer />
       <v-btn
         icon
         href="https://github.com/nykotar/rv-funtakes"
