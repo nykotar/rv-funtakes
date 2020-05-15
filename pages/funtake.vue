@@ -4,6 +4,11 @@
       class="fill-height"
       fluid
     >
+      <v-row justify="center">
+        <h1 class="text-center display-1">
+          1234-4321
+        </h1>
+      </v-row>
       <v-row
         align="center"
         justify="center"
@@ -16,7 +21,7 @@
             height="60vh"
             width="40vh"
             elevation="20"
-            class="card-trans"
+            class="color-trans"
             :class="animLeft"
             style="float:right;"
             @mouseenter.native="hoverCard(0)"
@@ -45,18 +50,27 @@
             height="60vh"
             width="40vh"
             elevation="20"
-            class="card-trans"
+            class="color-trans"
             :class="animRight"
             @mouseenter.native="hoverCard(1)"
           />
         </v-col>
+      </v-row>
+      <v-row justify="center">
+        <p>
+          <status-indicator status="positive" pulse />
+          <status-indicator status="positive" pulse />
+          <status-indicator />
+          <status-indicator />
+          <status-indicator />
+        </p>
       </v-row>
     </v-container>
   </v-content>
 </template>
 
 <style scoped>
-  .card-trans {
+  .color-trans {
     -webkit-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
   }
