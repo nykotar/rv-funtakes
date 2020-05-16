@@ -113,7 +113,9 @@ export default {
   },
   methods: {
     addField () {
-      this.sequence.push(this.sequence[this.sequence.length - 1])
+      const lastRange = this.sequence[this.sequence.length - 1].range
+      const lastBits = this.sequence[this.sequence.length - 1].bits
+      this.sequence.push({ range: lastRange, bits: lastBits })
     },
     removeField () {
       if (this.sequence.length > 1) {
