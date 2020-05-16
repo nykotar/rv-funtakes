@@ -5,8 +5,8 @@
       fluid
     >
       <v-row justify="center">
-        <h1 class="text-center display-1">
-          1234-4321
+        <h1 class="text-center display-1 font-weight-light">
+          {{ targetId }}
         </h1>
       </v-row>
       <v-row
@@ -250,8 +250,12 @@ export default {
       colors: [],
       animLeft: '',
       animRight: '',
-      targetId: '',
-      play: true
+      play: false
+    }
+  },
+  computed: {
+    targetId () {
+      return this.$store.state.funtake.settings.targetId
     }
   },
   methods: {

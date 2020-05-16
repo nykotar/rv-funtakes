@@ -26,14 +26,15 @@
                 <v-row v-for="(number, index) in sequence" :key="index" align="center">
                   <v-col>
                     <v-text-field
-                      v-model="sequence[index]"
+                      v-model="sequence[index].range"
                       type="number"
                       label="Number range"
                       required
+                      @input="calcBits(index)"
                     />
                   </v-col>
                   <v-col>
-                    <p>Bits: {{ calcBits(sequence[index]) }}</p>
+                    <p>Bits: {{ sequence[index].bits }}</p>
                   </v-col>
                 </v-row>
               </div>
@@ -66,9 +67,9 @@
         <v-btn
           color="success"
           class="mr-4 mt-3"
-          @click="validate"
+          @click="startFuntake"
         >
-          Begin
+          Start
         </v-btn>
       </v-container>
     </v-container>
@@ -79,20 +80,20 @@
 export default {
   data () {
     return {
-      sequence: [9],
+      sequence: [{ range: 9, bits: 4 }],
       targetId: ''
     }
   },
   computed: {
     shareLink () {
       let link = window.location.origin + '/?'
-      link = link + `targetId=${this.targetId}&sequence=${this.sequence.join(',')}`
+      link = link + `targetId=${this.targetId}&sequence=${this.sequence.map((elem) => { return elem.range }).join(',')}`
       return link
     },
     totalBits () {
       let total = 0
       for (const num of this.sequence) {
-        total = total + this.calcBits(num)
+        total = total + num.bits
       }
       return total
     }
@@ -119,8 +120,14 @@ export default {
         this.sequence.pop()
       }
     },
-    calcBits (num) {
-      return Math.floor(Math.log(num) / Math.log(2)) + 1
+    calcBits (index) {
+      const num = this.sequence[index].range
+      this.sequence[index].bits = Math.floor(Math.log(num) / Math.log(2)) + 1
+    },
+    startFuntake () {
+      this.$store.commit('funtake/setSequence', this.sequence)
+      this.$store.commit('funtake/setTargetId', this.targetId)
+      this.$router.push({ path: '/funtake' })
     }
   }
 }
