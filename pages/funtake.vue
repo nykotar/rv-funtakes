@@ -38,7 +38,7 @@
             @click="clickCenter()"
           >
             <v-icon x-large>
-              mdi-code-tags
+              {{ statusIcon }}
             </v-icon>
           </v-btn>
         </v-col>
@@ -246,21 +246,23 @@
 export default {
   data () {
     return {
-      sequence: [9],
+      targetId: '',
+      sequence: [],
       colors: [],
       animLeft: '',
       animRight: '',
-      play: false
+      statusIcon: 'mdi-play',
+      ready: false,
+      paused: true
     }
   },
-  computed: {
-    targetId () {
-      return this.$store.state.funtake.settings.targetId
-    }
+  mounted () {
+    this.targetId = this.$store.state.funtake.settings.targetId
+    this.sequence = this.$store.state.funtake.settings.sequence
   },
   methods: {
     hoverCard (n) {
-      if (this.play) {
+      if (!this.paused && this.ready) {
         if (n === 0) {
           this.animLeft = 'flip-out-ver-right'
           this.animRight = 'slide-out-top'
@@ -268,15 +270,28 @@ export default {
           this.animRight = 'flip-out-ver-left'
           this.animLeft = 'slide-out-top'
         }
-        this.play = false
-        this.genColors()
+        this.ready = false
       }
     },
     clickCenter () {
-      if (this.play === false) {
-        this.play = true
+      if (!this.ready) {
+        this.genColors()
         this.animLeft = 'swing-in-right-fwd'
         this.animRight = 'swing-in-left-fwd'
+        this.ready = true
+        if (this.paused) {
+          this.paused = false
+          this.statusIcon = 'mdi-code-tags'
+        }
+      } else {
+        // eslint-disable-next-line no-lonely-if
+        if (this.paused) {
+          this.paused = false
+          this.statusIcon = 'mdi-code-tags'
+        } else {
+          this.paused = true
+          this.statusIcon = 'mdi-play'
+        }
       }
     },
     genColors () {
