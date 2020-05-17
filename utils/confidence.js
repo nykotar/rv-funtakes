@@ -1,3 +1,4 @@
+/* eslint no-console: 0 */
 /*
 * By woo-d-woo from r/remoteviewing community.
 */
@@ -23,28 +24,10 @@ const cutoff = (d, S, N) => d + S * N
 
 const d1 = (p0 = P0, p1 = P1, alpha = ALPHA, beta = BETA) =>
   Math.log((1 - beta) / alpha) / (Math.log(p1 / p0) * ((1 - p0) / (1 - p1)))
-const d0 = (p0 = P0, p1 = P1, alpha = ALPHA, beta = BETA) =>
-  Math.log((1 - alpha) / beta) / (Math.log(p1 / p0) * ((1 - p0) / (1 - p1)))
 
 // const s = () => 0.5;
 const s = (p0 = P0, p1 = P1) =>
   Math.log((1 - p0) / (1 - p1)) / (Math.log(p1 / p0) * ((1 - p0) / (1 - p1)))
-
-// Call this one; the other one will shit itself if you give it an excessively long sequence which terminates before the last element
-exports.evaluateSequence = (arrSeq) => {
-  let result = -1
-  let index = 0
-  console.log(`Evaluating sequence: ${arrSeq.join('')}:`)
-  while (result === -1 && index < arrSeq.length) {
-    index++
-    const chunk = arrSeq.slice(0, index)
-    result = _evaluateFullSequence(arrSeq.slice(0, index))
-    console.log(
-      `   evaluated first ${index} funtakes: ${chunk.join('')} = ${result}`
-    )
-  }
-  return result
-}
 
 /** Returns -1 if the sequence is inconclusive or the 1|0 to accept */
 const _evaluateFullSequence = (arrSeq) => {
@@ -67,26 +50,18 @@ const _evaluateFullSequence = (arrSeq) => {
   return -1
 }
 
-console.table([
-  ['Symbol', 'Value'],
-  ['PSI_BASELINE', PSI_BASELINE],
-  ['d1', d1()],
-  ['s', s()]
-])
-
-const startAt = 18
-console.table(
-  Array(10)
-    .fill(0)
-    .reduce(
-      (acc, zero, index) => {
-        acc.push([
-          index + startAt,
-          cutoff(d1(), s(), index + startAt),
-          cutoff(-1 * d0(), s(), index + startAt)
-        ])
-        return acc
-      },
-      [['N', 'upper cutoff (if all 1s)']]
+// Call this one; the other one will shit itself if you give it an excessively long sequence which terminates before the last element
+exports.evaluateSequence = (arrSeq) => {
+  let result = -1
+  let index = 0
+  console.log(`Evaluating sequence: ${arrSeq.join('')}:`)
+  while (result === -1 && index < arrSeq.length) {
+    index++
+    const chunk = arrSeq.slice(0, index)
+    result = _evaluateFullSequence(arrSeq.slice(0, index))
+    console.log(
+      `   evaluated first ${index} funtakes: ${chunk.join('')} = ${result}`
     )
-)
+  }
+  return result
+}

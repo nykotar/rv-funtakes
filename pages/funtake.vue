@@ -262,13 +262,6 @@ const confidence = require('../utils/confidence')
 export default {
   data () {
     return {
-      targetId: '',
-      sequence: [],
-      totalBits: 0,
-      confirmedSequence: [],
-      cSequenceIndex: 0,
-      cSequenceBits: [],
-      totalConfirmedBits: 0,
       colors: [],
       animLeft: '',
       animRight: '',
@@ -277,27 +270,44 @@ export default {
       paused: true
     }
   },
-  mounted () {
-    this.targetId = this.$store.state.funtake.settings.targetId
-    this.sequence = this.$store.state.funtake.settings.sequence
-    let totalBits = 0
-    for (const num of this.sequence) {
-      totalBits += num.bits
-      this.confirmedSequence.push([])
+  computed: {
+    targetId () {
+      return this.$store.state.funtake.settings.targetId
+    },
+    totalBits () {
+      return this.$store.state.funtake.settings.totalBits
+    },
+    sequence () {
+      return this.$store.state.funtake.settings.sequence
+    },
+    totalConfirmedBits () {
+      return this.$store.state.funtake.funtake.totalConfirmedBits
+    },
+    cSequenceIndex () {
+      return this.$store.state.funtake.funtake.cSequenceIndex
+    },
+    cSequenceBits () {
+      return this.$store.state.funtake.funtake.cSequenceBits
+    },
+    confirmedSequence () {
+      return this.$store.state.funtake.funtake.confirmedSequence
     }
-    this.totalBits = totalBits
+  },
+  mounted () {
+    if (this.totalBits === 0) {
+      this.$router.push({ path: '/' })
+    }
   },
   methods: {
     hoverCard (n) {
       if (!this.paused && this.ready) {
-        this.cSequenceBits.push(n)
+        this.$store.commit('funtake/pushBit', n)
         const confEval = confidence.evaluateSequence(this.cSequenceBits)
         if (confEval !== -1) {
-          this.cSequenceBits = []
-          this.confirmedSequence[this.cSequenceIndex].push(confEval)
-          this.totalConfirmedBits += 1
+          this.$store.commit('funtake/resetFuntakeBitSequence')
+          this.$store.commit('funtake/confirmBit', this.cSequenceIndex, confEval)
           if (this.confirmedSequence[this.cSequenceIndex].length === this.sequence[this.cSequenceIndex].bits) {
-            this.cSequenceIndex += 1
+            this.$store.commit('funtake/incrementSequenceIndex')
           }
         }
         if (n === 0) {
