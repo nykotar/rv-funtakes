@@ -57,19 +57,32 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <p>
-          <status-indicator status="positive" pulse />
-          <status-indicator status="positive" pulse />
-          <status-indicator />
-          <status-indicator />
-          <status-indicator />
-        </p>
+        <ul class="indicators">
+          <li v-for="index in totalBits" :key="index">
+            <status-indicator
+              :status="`${index <= totalConfirmedBits ? 'positive' : ''}`"
+              :pulse="index <= totalConfirmedBits"
+            />
+          </li>
+        </ul>
       </v-row>
     </v-container>
   </v-content>
 </template>
 
 <style scoped>
+
+  .indicators {
+    padding:0px;
+    margin:0px;
+    list-style: none;
+  }
+
+  .indicators li {
+    display: inline;
+    padding-right: 3px;
+  }
+
   .color-trans {
     -webkit-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
@@ -243,11 +256,19 @@
 </style>
 
 <script>
+
+const confidence = require('../utils/confidence')
+
 export default {
   data () {
     return {
       targetId: '',
       sequence: [],
+      totalBits: 0,
+      confirmedSequence: [],
+      cSequenceIndex: 0,
+      cSequenceBits: [],
+      totalConfirmedBits: 0,
       colors: [],
       animLeft: '',
       animRight: '',
@@ -259,10 +280,26 @@ export default {
   mounted () {
     this.targetId = this.$store.state.funtake.settings.targetId
     this.sequence = this.$store.state.funtake.settings.sequence
+    let totalBits = 0
+    for (const num of this.sequence) {
+      totalBits += num.bits
+      this.confirmedSequence.push([])
+    }
+    this.totalBits = totalBits
   },
   methods: {
     hoverCard (n) {
       if (!this.paused && this.ready) {
+        this.cSequenceBits.push(n)
+        const confEval = confidence.evaluateSequence(this.cSequenceBits)
+        if (confEval !== -1) {
+          this.cSequenceBits = []
+          this.confirmedSequence[this.cSequenceIndex].push(confEval)
+          this.totalConfirmedBits += 1
+          if (this.confirmedSequence[this.cSequenceIndex].length === this.sequence[this.cSequenceIndex].bits) {
+            this.cSequenceIndex += 1
+          }
+        }
         if (n === 0) {
           this.animLeft = 'flip-out-ver-right'
           this.animRight = 'slide-out-top'
