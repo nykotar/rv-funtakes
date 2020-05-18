@@ -266,6 +266,8 @@ export default {
       animLeft: '',
       animRight: '',
       statusIcon: 'mdi-play',
+      confirmationAudio: new Audio(require('@/assets/confirmation.ogg')),
+      cardFlipAudio: new Audio(require('@/assets/card-flip.ogg')),
       ready: false,
       paused: true
     }
@@ -301,9 +303,11 @@ export default {
   methods: {
     hoverCard (n) {
       if (!this.paused && this.ready) {
+        this.cardFlipAudio.play()
         this.$store.commit('funtake/pushBit', n)
         const confEval = confidence.evaluateSequence(this.cSequenceBits)
         if (confEval !== -1) {
+          this.confirmationAudio.play()
           this.$store.commit('funtake/resetFuntakeBitSequence')
           this.$store.commit('funtake/confirmBit', this.cSequenceIndex, confEval)
           if (this.confirmedSequence[this.cSequenceIndex].length === this.sequence[this.cSequenceIndex].bits) {
