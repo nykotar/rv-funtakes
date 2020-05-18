@@ -67,6 +67,23 @@
         </ul>
       </v-row>
     </v-container>
+    <v-bottom-sheet v-model="previousGame" persistent>
+      <v-sheet class="text-center" height="130px">
+        <v-btn
+          class="mt-6"
+          flat
+          color="primary"
+          @click="previousGame = false"
+        >
+          ok!
+        </v-btn>
+        <div class="py-3">
+          You are continuing a funtake you started before. If you want to start a new funtake <nuxt-link to="/">
+            click here
+          </nuxt-link>.
+        </div>
+      </v-sheet>
+    </v-bottom-sheet>
   </v-content>
 </template>
 
@@ -269,7 +286,8 @@ export default {
       confirmationAudio: new Audio(require('@/assets/confirmation.ogg')),
       cardFlipAudio: new Audio(require('@/assets/card-flip.ogg')),
       ready: false,
-      paused: true
+      paused: true,
+      previousGame: false
     }
   },
   computed: {
@@ -298,6 +316,8 @@ export default {
   mounted () {
     if (this.totalBits === 0) {
       this.$router.push({ path: '/' })
+    } else if (this.cSequenceBits.length > 0 || this.cSequenceIndex > 0) {
+      this.previousGame = true
     }
   },
   methods: {
