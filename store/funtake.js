@@ -29,7 +29,7 @@ export const mutations = {
   setTargetId (state, targetId) {
     state.settings.targetId = targetId
   },
-  confirmBit (state, index, bit) {
+  confirmBit (state, { index, bit }) {
     state.funtake.confirmedSequence[index].push(bit)
     state.funtake.totalConfirmedBits += 1
   },

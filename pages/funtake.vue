@@ -285,6 +285,7 @@ export default {
       statusIcon: 'mdi-play',
       confirmationAudio: new Audio(require('@/assets/confirmation.ogg')),
       cardFlipAudio: new Audio(require('@/assets/card-flip.ogg')),
+      funtakeFinishedAudio: new Audio(require('@/assets/win.ogg')),
       ready: false,
       paused: true,
       previousGame: false
@@ -329,9 +330,12 @@ export default {
         if (confEval !== -1) {
           this.confirmationAudio.play()
           this.$store.commit('funtake/resetFuntakeBitSequence')
-          this.$store.commit('funtake/confirmBit', this.cSequenceIndex, confEval)
+          this.$store.commit('funtake/confirmBit', { index: this.cSequenceIndex, bit: confEval })
           if (this.confirmedSequence[this.cSequenceIndex].length === this.sequence[this.cSequenceIndex].bits) {
             this.$store.commit('funtake/incrementSequenceIndex')
+          }
+          if (this.cSequenceIndex > this.sequence.length - 1) {
+            this.finishGame()
           }
         }
         if (n === 0) {
@@ -370,6 +374,11 @@ export default {
         '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
         '#' + (Math.random() * 0xFFFFFF << 0).toString(16)
       ]
+    },
+    finishGame () {
+      this.paused = true
+      this.funtakeFinishedAudio.play()
+      this.$router.push({ path: '/results' })
     }
   }
 }
