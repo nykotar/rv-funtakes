@@ -280,6 +280,7 @@ export default {
   data () {
     return {
       colors: [],
+      cardValues: [],
       animLeft: '',
       animRight: '',
       statusIcon: 'mdi-play',
@@ -320,12 +321,13 @@ export default {
     } else if (this.cSequenceBits.length > 0 || this.cSequenceIndex > 0) {
       this.previousGame = true
     }
+    this.flushCardValues()
   },
   methods: {
     hoverCard (n) {
       if (!this.paused && this.ready) {
         this.cardFlipAudio.play()
-        this.$store.commit('funtake/pushBit', n)
+        this.$store.commit('funtake/pushBit', this.cardValues[n])
         const confEval = confidence.evaluateSequence(this.cSequenceBits)
         if (confEval !== -1) {
           this.confirmationAudio.play()
@@ -350,6 +352,7 @@ export default {
     },
     clickCenter () {
       if (!this.ready) {
+        this.flushCardValues()
         this.genColors()
         this.animLeft = 'swing-in-right-fwd'
         this.animRight = 'swing-in-left-fwd'
@@ -379,6 +382,10 @@ export default {
       this.paused = true
       this.funtakeFinishedAudio.play()
       this.$router.push({ path: '/results' })
+    },
+    flushCardValues () {
+      const random = Math.round(Math.random())
+      this.cardValues = [random, 0 + !random]
     }
   }
 }
