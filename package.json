@@ -15,7 +15,7 @@
     "gh-pages-deploy": "node scripts/gh-pages-deploy.js"
   },
   "dependencies": {
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "vue-status-indicator": "^1.2.1",
     "vuex-persist": "^2.2.0"
   },
